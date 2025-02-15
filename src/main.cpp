@@ -43,10 +43,11 @@ void setup() {
   Servo_rot.setAccel(0.1);
   Servo_Up.setAccel(0.1);
   Servo_Fd.setAccel(0.1);
+  Servo_rot.setAutoDetach(false);
   Servo_Up.setAutoDetach(false);
   Servo_Fd.setAutoDetach(false);
   
-  //Servo_rot.attach(5);
+  Servo_rot.attach(5, 90);
   Servo_Up.attach(6, 120);
   Servo_Up.smoothStart();
   Servo_Fd.attach(7, 180);
@@ -57,7 +58,7 @@ void loop() {
   right_mot.tick();
   left_mot.tick();
 
-  //Servo_rot.tick();
+  Servo_rot.tick();
   Servo_Fd.tick();
   Servo_Up.tick();
 
