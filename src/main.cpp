@@ -30,7 +30,8 @@ ServoSmooth Servo_Up;
 ServoSmooth Servo_Fd;
 // INITS
 
-void setup() {
+void setup()
+{
   right_mot.setSmoothSpeed(10);
   left_mot.setSmoothSpeed(10);
   right_mot.smoothMode(true);
@@ -46,15 +47,17 @@ void setup() {
   Servo_rot.setAutoDetach(false);
   Servo_Up.setAutoDetach(false);
   Servo_Fd.setAutoDetach(false);
-  
+
   Servo_rot.attach(5, 90);
+  Servo_rot.smoothStart();
   Servo_Up.attach(6, 120);
   Servo_Up.smoothStart();
   Servo_Fd.attach(7, 180);
   Servo_Fd.smoothStart();
 }
 
-void loop() {
+void loop()
+{
   right_mot.tick();
   left_mot.tick();
 
@@ -62,7 +65,8 @@ void loop() {
   Servo_Fd.tick();
   Servo_Up.tick();
 
-  if (millis() - tmr >= 3000) {
+  if (millis() - tmr >= 3000)
+  {
     tmr = millis();
     flag = !flag;
     Servo_Fd.setTargetDeg(flag ? 180 : 80);
