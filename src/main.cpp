@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <ServoSmooth.h>
 #include <GyverMotor2.h>
+#include <SoftwareSerial.h>
 // INCLUDES
 
 // SETTINGS
@@ -15,20 +16,47 @@
 #define LMOTORA 9
 #define LMOTORB 10
 #define LMOTORPWM 11
+#define BT_RX 12
+#define BT_TX 13
 // PINS
 
 // VARS
 uint32_t tmr;
-boolean flag;
+boolean parsingDone, parsingStart;
+String string_convert;
 // VARS
 
 // INITS
+SoftwareSerial BTser(BT_RX, BT_TX);
 GMotor2<DRIVER3WIRE> right_mot(RMOTORA, RMOTORB, RMOTORPWM);
 GMotor2<DRIVER3WIRE> left_mot(LMOTORA, LMOTORB, LMOTORPWM);
 ServoSmooth Servo_rot;
 ServoSmooth Servo_Up;
 ServoSmooth Servo_Fd;
 // INITS
+
+void parsing() {
+  if (BTser.available() > 0) {       // если в буфере есть данные
+    char incomingChar = BTser.read();// читаем из буфера
+    if (parsingStart) {                 // начать принятие пакетов
+      if (incomingChar == ' ') {        // принят пакет dataX
+        //dataX = string_convert.toInt(); // ковертируем принятый пакет в переменную
+        string_convert = "";            // очищаем переменную пакета
+      }
+      else if (incomingChar == ';') {   // принят пакет dataY
+        //dataY = string_convert.toInt(); // ковертируем принятый пакет в переменную
+        string_convert = "";            // очищаем переменную пакета
+        parsingStart = false;           // закончить принятие пакетов
+        parsingDone = true;             // парсинг окончен, можно переходить к движению
+      } else {
+        string_convert += incomingChar; // записываем  принятые данные в переменную
+      }
+    }
+    if (incomingChar == '$') {          // начало парсинга
+      parsingDone = true;              // начать принятие пакетов
+    }
+  }
+}
 
 void setup()
 {
@@ -64,12 +92,4 @@ void loop()
   Servo_rot.tick();
   Servo_Fd.tick();
   Servo_Up.tick();
-
-  if (millis() - tmr >= 3000)
-  {
-    tmr = millis();
-    flag = !flag;
-    Servo_Fd.setTargetDeg(flag ? 180 : 80);
-    Servo_Up.setTargetDeg(flag ? 120 : 150);
-  }
 }
