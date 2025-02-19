@@ -49,11 +49,8 @@ void setup()
   Servo_Fd.setAutoDetach(false);
 
   Servo_rot.attach(5, 90);
-  Servo_rot.smoothStart();
   Servo_Up.attach(6, 120);
-  Servo_Up.smoothStart();
-  Servo_Fd.attach(7, 180);
-  Servo_Fd.smoothStart();
+  Servo_Fd.attach(7, 150);
 }
 
 void loop()
@@ -69,7 +66,8 @@ void loop()
   {
     tmr = millis();
     flag = !flag;
-    Servo_Fd.setTargetDeg(flag ? 180 : 80);
-    Servo_Up.setTargetDeg(flag ? 120 : 150);
+    Servo_rot.setTargetDeg(flag ? 0 : 130);
+    Servo_Fd.setTargetDeg(flag ? 180 : 50);
+    Servo_Up.setTargetDeg(flag ? 50 : 130);
   }
 }
